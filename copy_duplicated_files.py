@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+import argparse
 
 def find_duplicated_json_files(root_folders):
     # Dictionary to store filenames and their corresponding file paths
@@ -33,8 +34,14 @@ def overwrite_duplicated_files(source_folder, duplicated_files):
                     json.dump(data, dest_file, indent=4)
 
 if __name__ == "__main__":
-    root_folders = ["/Users/antonioyang/Documents/Python/copy_duplicated_file/old_file_annotated", "/Users/antonioyang/Documents/Python/copy_duplicated_file/new_file_non-annotated"]
     
+    parser = argparse.ArgumentParser(description="Paths")
+    parser.add_argument('--annotated_folder', help='Path to the input file')
+    parser.add_argument('--pre_labeled_folder', help='Path to the output file')
+    args = parser.parse_args()
+    annotated_folder = args.annotated_folder
+    pre_labeled_folder = args.pre_labeled_folder
+    root_folders = [annotated_folder, pre_labeled_folder]
     # Find duplicated JSON files in the specified root folders
     duplicated_json_files = find_duplicated_json_files(root_folders)
     
