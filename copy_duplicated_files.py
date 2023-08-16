@@ -16,14 +16,8 @@ def find_and_replace_duplicated(old_folder, new_folder):
         # Create the file paths for the old and new files
         old_file_path = os.path.join(old_folder, filename)
         new_file_path = os.path.join(new_folder, filename)
-
-        # Open the old file, read its JSON content, and store it in old_data
-        with open(old_file_path, 'r') as old_file:
-            old_data = json.load(old_file)
-
-        # Open the new file in write mode, and write the old JSON content into it
-        with open(new_file_path, 'w') as new_file:
-            json.dump(old_data, new_file, indent=4)
+        # Overwrite the new file with the old file
+        shutil.copy2(old_file_path, new_file_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Paths")
