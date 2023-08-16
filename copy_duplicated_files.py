@@ -4,20 +4,27 @@ import shutil
 import argparse
 
 def find_and_replace_duplicated(old_folder, new_folder):
-    # Get list of filenames in both old and new folders
-    old_files = os.listdir(old_folder)
-    new_files = os.listdir(new_folder)
-
-    # Find the set of duplicated filenames in both old and new folders
-    duplicated_files = set(old_files) & set(new_files)
-
-    # Loop through each duplicated filename
-    for filename in duplicated_files:
-        # Create the file paths for the old and new files
-        old_file_path = os.path.join(old_folder, filename)
-        new_file_path = os.path.join(new_folder, filename)
-        # Overwrite the new file with the old file
-        shutil.copy2(old_file_path, new_file_path)
+   # Walk through the directory tree rooted at old_folder
+   for root, _, _ in os.walk(old_folder):
+        # Get the list of filenames in the current old folder
+        old_files = set(os.listdir(root))
+        
+        # Get the list of filenames in the new folder
+        new_files = set(os.listdir(new_folder))
+        
+        # Find duplicated filenames in both old and new folders
+        duplicated_files = old_files & new_files
+        
+        # Loop through each duplicated filename
+        for filename in duplicated_files:
+            # Create the file paths for the old and new files
+            old_file_path = os.path.join(root, filename)
+            new_file_path = os.path.join(new_folder, os.path.relpath(old_file_path, old_folder))
+            
+            # Check if the file already exists in the new folder
+            if os.path.exists(new_file_path):
+                # Overwrite the new file with the old file, preserving metadata
+                shutil.copy2(old_file_path, new_file_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Paths")
